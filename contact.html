@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Panchayat Officials | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    
+    <!-- Title & Header Bar -->
+    <div class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-blue-200">
+        <i class="fa-solid fa-address-book"></i> Public Administrative Directory
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gov-navy" data-i18n="serviceContactTitle">
+        Contact Gram Panchayat Officials
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1">
+        Directly connect with the elected body, Gram Sevak, and Panchayat office staff
+      </p>
+    </div>
+
+    <!-- Officials Directory Cards (Section 13) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      
+      <!-- Official 1: Sarpanch -->
+      <div class="gov-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center flex flex-col items-center">
+        <div class="w-20 h-20 rounded-full bg-amber-100 border-2 border-amber-400 p-1 mb-4">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Sarpanch" class="w-full h-full rounded-full object-cover" />
+        </div>
+        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800 mb-1">
+          Elected Head
+        </span>
+        <h3 class="font-bold text-base text-slate-800">Smt. Sunita Patil</h3>
+        <p class="text-xs font-semibold text-gov-navy mb-3">Sarpanch (सरपंच)</p>
+        
+        <div class="w-full pt-3 border-t border-slate-100 text-xs space-y-1 text-slate-600">
+          <p><i class="fa-solid fa-phone text-emerald-600 mr-1.5"></i> +91 98221 44550</p>
+          <p><i class="fa-solid fa-envelope text-blue-600 mr-1.5"></i> sarpanch@grampanchayat.gov.in</p>
+        </div>
+      </div>
+
+      <!-- Official 2: Up-Sarpanch -->
+      <div class="gov-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center flex flex-col items-center">
+        <div class="w-20 h-20 rounded-full bg-blue-100 border-2 border-blue-400 p-1 mb-4">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="Up Sarpanch" class="w-full h-full rounded-full object-cover" />
+        </div>
+        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-800 mb-1">
+          Elected Representative
+        </span>
+        <h3 class="font-bold text-base text-slate-800">Shri. Ramesh Deshmukh</h3>
+        <p class="text-xs font-semibold text-gov-navy mb-3">Up-Sarpanch (उपसरपंच)</p>
+        
+        <div class="w-full pt-3 border-t border-slate-100 text-xs space-y-1 text-slate-600">
+          <p><i class="fa-solid fa-phone text-emerald-600 mr-1.5"></i> +91 98221 44551</p>
+          <p><i class="fa-solid fa-envelope text-blue-600 mr-1.5"></i> upsarpanch@grampanchayat.gov.in</p>
+        </div>
+      </div>
+
+      <!-- Official 3: Gram Sevak -->
+      <div class="gov-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center flex flex-col items-center">
+        <div class="w-20 h-20 rounded-full bg-emerald-100 border-2 border-emerald-400 p-1 mb-4">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" alt="Gram Sevak" class="w-full h-full rounded-full object-cover" />
+        </div>
+        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 mb-1">
+          Chief Development Officer
+        </span>
+        <h3 class="font-bold text-base text-slate-800">Shri. Anand Kulkarni</h3>
+        <p class="text-xs font-semibold text-gov-navy mb-3">Gram Sevak (ग्रामसेवक)</p>
+        
+        <div class="w-full pt-3 border-t border-slate-100 text-xs space-y-1 text-slate-600">
+          <p><i class="fa-solid fa-phone text-emerald-600 mr-1.5"></i> +91 94220 01122</p>
+          <p><i class="fa-solid fa-envelope text-blue-600 mr-1.5"></i> gramsevak@grampanchayat.gov.in</p>
+        </div>
+      </div>
+
+      <!-- Official 4: Sanitation & Water Head -->
+      <div class="gov-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center flex flex-col items-center">
+        <div class="w-20 h-20 rounded-full bg-purple-100 border-2 border-purple-400 p-1 mb-4">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80" alt="Sanitation Head" class="w-full h-full rounded-full object-cover" />
+        </div>
+        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-purple-100 text-purple-800 mb-1">
+          Field Operations
+        </span>
+        <h3 class="font-bold text-base text-slate-800">Shri. Nitin Shinde</h3>
+        <p class="text-xs font-semibold text-gov-navy mb-3">Water & Sanitation Head</p>
+        
+        <div class="w-full pt-3 border-t border-slate-100 text-xs space-y-1 text-slate-600">
+          <p><i class="fa-solid fa-phone text-emerald-600 mr-1.5"></i> +91 98811 23490</p>
+          <p><i class="fa-solid fa-envelope text-blue-600 mr-1.5"></i> waterworks@grampanchayat.gov.in</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Office Details & Contact Form Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left Column: Office Information & Map Placeholder -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h3 class="text-base font-bold text-gov-navy mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-landmark text-amber-500"></i>
+            <span>Gram Panchayat Administrative Bhavan</span>
+          </h3>
+
+          <div class="space-y-3.5 text-xs text-slate-600">
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-location-dot text-rose-500 text-sm mt-0.5"></i>
+              <div>
+                <strong class="text-slate-800">Office Address:</strong>
+                <p>Gram Panchayat Administrative Bhavan, Main Market Road, Near S.T. Stand, District Pune, Maharashtra - 412411</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-phone text-emerald-600 text-sm mt-0.5"></i>
+              <div>
+                <strong class="text-slate-800">Telephone / Helpline:</strong>
+                <p>+91 2135-224455 (Office) | 1800-120-8040 (Toll Free)</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-envelope text-blue-600 text-sm mt-0.5"></i>
+              <div>
+                <strong class="text-slate-800">Official Email:</strong>
+                <p>contact@digitalgrampanchayat.gov.in</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-clock text-amber-600 text-sm mt-0.5"></i>
+              <div>
+                <strong class="text-slate-800">Public Office Hours:</strong>
+                <p>Monday to Saturday: 10:00 AM – 5:00 PM</p>
+                <p class="text-[10px] text-slate-400">Closed on 2nd & 4th Saturdays, Sundays & Government Holidays</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Maps Interactive Placeholder -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm overflow-hidden">
+          <div class="w-full h-48 bg-slate-200 rounded-xl relative overflow-hidden flex flex-col items-center justify-center text-center p-4">
+            <!-- Simulated Map Canvas Background -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] bg-[size:24px_24px] opacity-70"></div>
+            <div class="relative z-10">
+              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center mx-auto mb-2 shadow-lg animate-bounce">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <h4 class="font-bold text-xs text-slate-800">Gram Panchayat Bhavan Location</h4>
+              <p class="text-[10px] text-slate-500">Coordinates: 18.5204° N, 73.8567° E</p>
+              <a href="https://maps.google.com" target="_blank" class="inline-block mt-2 text-[10px] bg-white px-2.5 py-1 rounded shadow text-gov-navy font-bold hover:bg-slate-50">
+                Open in Google Maps &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Inquiry / Grievance Contact Form -->
+      <div class="lg:col-span-7">
+        <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+          <h3 class="text-base font-bold text-gov-navy mb-1">Citizen Public Inquiry Form</h3>
+          <p class="text-xs text-slate-500 mb-6">Send an administrative question or request direct clarification from the Gram Sevak desk</p>
+
+          <form id="contact-inquiry-form" class="space-y-4 text-xs">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Full Name <span class="text-rose-500">*</span></label>
+                <input type="text" id="cnt-name" placeholder="Your name" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+              </div>
+
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Mobile Number <span class="text-rose-500">*</span></label>
+                <input type="tel" id="cnt-mobile" placeholder="10-digit number" maxlength="10" pattern="[0-9]{10}" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Email Address</label>
+                <input type="email" id="cnt-email" placeholder="Optional email" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" />
+              </div>
+
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">Subject / Department</label>
+                <select id="cnt-dept" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy bg-white">
+                  <option value="General Inquiry">General Village Inquiry</option>
+                  <option value="Certificate Guidance">Certificate Application Guidance</option>
+                  <option value="Scheme Eligibility">Government Scheme Query</option>
+                  <option value="Tax Receipt">Tax Payment Clarification</option>
+                  <option value="Water/Electricity">Water Supply / Electricity Issue</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Message / Query Details <span class="text-rose-500">*</span></label>
+              <textarea id="cnt-msg" rows="4" placeholder="Type your query clearly..." class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-inquiry" class="w-full py-3 rounded-lg bg-gov-navy hover:bg-gov-navy-dark text-white font-bold text-xs uppercase tracking-wider shadow transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Send Message to Panchayat</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.auth.getUser();
+      if (user) {
+        document.getElementById('cnt-name').value = user.name || '';
+        document.getElementById('cnt-mobile').value = user.mobile || '';
+        document.getElementById('cnt-email').value = user.email || '';
+      }
+
+      document.getElementById('contact-inquiry-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btn-submit-inquiry');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sending...';
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> Send Message to Panchayat';
+          window.ui.showToast('Your inquiry has been submitted! Official response will be sent via SMS/Email.', 'success');
+          document.getElementById('cnt-msg').value = '';
+        }, 800);
+      });
+    });
+  </script>
+</body>
+</html>

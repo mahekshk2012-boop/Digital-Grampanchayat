@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcements & Public Notices | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+    
+    <!-- Title & Header Bar -->
+    <div class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-blue-200">
+        <i class="fa-solid fa-bullhorn"></i> Official Panchayat Communications
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gov-navy" data-i18n="latestNoticesTitle">
+        Village Announcements & Circulars
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1" data-i18n="latestNoticesSubtitle">
+        Official circulars, Gram Sabha resolutions, and emergency public advisories
+      </p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="relative w-full sm:w-80">
+        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <i class="fa-solid fa-search text-xs"></i>
+        </span>
+        <input type="text" id="notice-search-input" placeholder="Search notices, Gram Sabha, water..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gov-navy" />
+      </div>
+
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <select id="notice-cat-filter" class="w-full sm:w-auto px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-gov-navy">
+          <option value="All">All Categories</option>
+          <option value="Gram Sabha">Gram Sabha</option>
+          <option value="Water Supply">Water Supply</option>
+          <option value="Electricity">Electricity</option>
+          <option value="Public Health">Public Health</option>
+          <option value="Sanitation">Sanitation</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Notices Cards List -->
+    <div id="notices-list-container" class="space-y-4">
+      <!-- Populated dynamically -->
+    </div>
+
+  </main>
+
+  <!-- Notice Details Modal -->
+  <div id="notice-detail-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden">
+      
+      <div class="bg-gov-navy p-5 text-white flex items-center justify-between border-b-2 border-gov-saffron">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-newspaper text-amber-400"></i>
+          <h3 class="font-bold text-sm">Official Gram Panchayat Circular</h3>
+        </div>
+        <button onclick="document.getElementById('notice-detail-modal').classList.add('hidden')" class="text-white/80 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div class="flex items-center justify-between">
+          <span id="modal-notice-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase">CATEGORY</span>
+          <span id="modal-notice-date" class="text-slate-500 font-semibold"><i class="fa-regular fa-calendar mr-1"></i> Date</span>
+        </div>
+
+        <h4 id="modal-notice-title" class="font-bold text-base text-slate-800 leading-snug">Title</h4>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-700 leading-relaxed" id="modal-notice-desc">
+          Description
+        </div>
+
+        <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 flex items-center gap-2">
+          <i class="fa-solid fa-circle-info text-blue-600"></i>
+          <span>For clarifications regarding this circular, please visit the Panchayat office during working hours (10 AM - 5 PM).</span>
+        </div>
+      </div>
+
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button onclick="document.getElementById('notice-detail-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-gov-navy text-white text-xs font-bold hover:bg-gov-navy-dark transition">
+          Close Notice
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const notices = await window.db.getAnnouncements();
+      const container = document.getElementById('notices-list-container');
+      const searchInput = document.getElementById('notice-search-input');
+      const catSelect = document.getElementById('notice-cat-filter');
+
+      const render = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const cat = catSelect.value;
+
+        const filtered = notices.filter(n => {
+          const matchQuery = n.title.toLowerCase().includes(query) || n.description.toLowerCase().includes(query);
+          const matchCat = cat === 'All' || n.category === cat;
+          return matchQuery && matchCat;
+        });
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="bg-white p-12 text-center rounded-2xl border border-slate-200">
+              <i class="fa-solid fa-newspaper text-4xl text-slate-300 mb-3"></i>
+              <h4 class="font-bold text-sm text-slate-700">No Announcements Found</h4>
+              <p class="text-xs text-slate-500 mt-1">There are no active notices matching your criteria.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(n => `
+          <div class="gov-card bg-white rounded-2xl p-6 border ${n.important ? 'border-l-4 border-l-rose-500 border-slate-200 shadow-md' : 'border-slate-200'} space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded ${n.important ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">
+                  ${n.category}
+                </span>
+                ${n.important ? `
+                  <span class="bg-rose-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full animate-pulse">
+                    URGENT NOTICE
+                  </span>
+                ` : ''}
+              </div>
+
+              <span class="text-xs text-slate-400 flex items-center gap-1">
+                <i class="fa-regular fa-calendar"></i> ${n.date}
+              </span>
+            </div>
+
+            <h3 class="font-bold text-base text-slate-800 leading-snug">${n.title}</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">${n.description}</p>
+
+            <div class="pt-2 flex items-center justify-end">
+              <button onclick="window.openNoticeModal('${n.announcementId}')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-expand"></i>
+                <span>Read Full Circular</span>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      };
+
+      render();
+      searchInput.addEventListener('input', render);
+      catSelect.addEventListener('change', render);
+    });
+
+    window.openNoticeModal = async (id) => {
+      const notices = await window.db.getAnnouncements();
+      const n = notices.find(item => item.announcementId === id);
+      if (!n) return;
+
+      document.getElementById('modal-notice-title').textContent = n.title;
+      document.getElementById('modal-notice-desc').textContent = n.description;
+      document.getElementById('modal-notice-date').textContent = n.date;
+
+      const badge = document.getElementById('modal-notice-badge');
+      badge.textContent = n.category;
+      badge.className = `px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${n.important ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}`;
+
+      document.getElementById('notice-detail-modal').classList.remove('hidden');
+    };
+  </script>
+</body>
+</html>

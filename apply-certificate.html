@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for Certificate | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+    
+    <!-- Title Header -->
+    <div class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-blue-200">
+        <i class="fa-solid fa-stamp"></i> Citizen Administrative Services
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gov-navy" data-i18n="certPortalTitle">
+        Certificate Application Portal
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1" data-i18n="certPortalSubtitle">
+        Apply for official Grampanchayat certificates online with digital tracking
+      </p>
+    </div>
+
+    <!-- Certificate Selector Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <button type="button" class="cert-select-btn p-3.5 bg-white rounded-xl border-2 border-gov-navy shadow-sm text-center flex flex-col items-center justify-center transition" data-type="Income Certificate">
+        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center text-base mb-2">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+        </div>
+        <span class="font-bold text-xs text-slate-800">Income Cert</span>
+        <span class="text-[10px] text-slate-500">उत्पन्न दाखला</span>
+      </button>
+
+      <button type="button" class="cert-select-btn p-3.5 bg-white rounded-xl border-2 border-slate-200 shadow-sm text-center flex flex-col items-center justify-center transition" data-type="Residence Certificate">
+        <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center text-base mb-2">
+          <i class="fa-solid fa-house-user"></i>
+        </div>
+        <span class="font-bold text-xs text-slate-800">Residence Cert</span>
+        <span class="text-[10px] text-slate-500">रहिवासी दाखला</span>
+      </button>
+
+      <button type="button" class="cert-select-btn p-3.5 bg-white rounded-xl border-2 border-slate-200 shadow-sm text-center flex flex-col items-center justify-center transition" data-type="Birth Certificate">
+        <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center text-base mb-2">
+          <i class="fa-solid fa-baby"></i>
+        </div>
+        <span class="font-bold text-xs text-slate-800">Birth Cert</span>
+        <span class="text-[10px] text-slate-500">जन्म दाखला</span>
+      </button>
+
+      <button type="button" class="cert-select-btn p-3.5 bg-white rounded-xl border-2 border-slate-200 shadow-sm text-center flex flex-col items-center justify-center transition" data-type="Death Certificate">
+        <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-700 flex items-center justify-center text-base mb-2">
+          <i class="fa-solid fa-ribbon"></i>
+        </div>
+        <span class="font-bold text-xs text-slate-800">Death Cert</span>
+        <span class="text-[10px] text-slate-500">मृत्यू दाखला</span>
+      </button>
+    </div>
+
+    <!-- Main Application Form Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      
+      <div class="bg-gov-navy px-6 py-4 text-white flex items-center justify-between border-b-2 border-gov-saffron">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-file-signature text-amber-400"></i>
+          <h3 id="form-cert-title" class="font-bold text-sm">Income Certificate Application Form</h3>
+        </div>
+        <span class="text-[11px] bg-white/20 px-2.5 py-0.5 rounded-full font-medium">Standard Form 4A</span>
+      </div>
+
+      <form id="certificate-form" class="p-6 sm:p-8 space-y-6">
+        
+        <!-- Applicant Name & Mobile -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Applicant Full Name (अर्जदाराचे पूर्ण नाव) <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="cert-name" placeholder="As per Aadhaar Card" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Mobile Number (मोबाईल क्रमांक) <span class="text-rose-500">*</span>
+            </label>
+            <input type="tel" id="cert-mobile" placeholder="10-digit mobile" maxlength="10" pattern="[0-9]{10}" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+          </div>
+        </div>
+
+        <!-- Aadhaar & Ward -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Aadhaar / Identity No (आधार क्रमांक) <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="cert-aadhar" placeholder="XXXX XXXX XXXX" maxlength="14" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Ward / Prabhag (प्रभाग) <span class="text-rose-500">*</span>
+            </label>
+            <select id="cert-ward" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy bg-white" required>
+              <option value="Ward 1">Ward No. 1 (Shivaji Galli)</option>
+              <option value="Ward 2">Ward No. 2 (Ambedkar Chowk)</option>
+              <option value="Ward 3">Ward No. 3 (Mandir Galli)</option>
+              <option value="Ward 4">Ward No. 4 (School Area)</option>
+              <option value="Ward 5">Ward No. 5 (Outskirts)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            Village Residential Address (गावातील पत्ता) <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="cert-address" placeholder="House / Gala No, Galli Name, Village" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+        </div>
+
+        <!-- Certificate Specific Fields (Dynamic) -->
+        <div id="dynamic-cert-fields" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+          <!-- Populated by JS according to selected certificate -->
+        </div>
+
+        <!-- Supporting Document Upload (Firebase Storage integration) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            Upload Supporting Documents (कागदपत्रे अपलोड करा) <span class="text-rose-500">*</span>
+          </label>
+          <p class="text-[11px] text-slate-500 mb-2">Upload Ration Card / Aadhaar / Light Bill / Hospital Slip (PDF or Image, max 5MB)</p>
+          
+          <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-gov-navy transition bg-slate-50 cursor-pointer" onclick="document.getElementById('cert-doc-file').click()">
+            <input type="file" id="cert-doc-file" class="hidden" accept=".pdf,image/*" />
+            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center mx-auto mb-2">
+              <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+            </div>
+            <p id="doc-file-name" class="text-xs font-semibold text-slate-700">Click to browse or drag and drop supporting document</p>
+            <p class="text-[10px] text-slate-400 mt-1">Stored securely in Firebase Storage</p>
+          </div>
+        </div>
+
+        <!-- Additional Information / Purpose -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Purpose of Certificate (दाखल्याचे कारण / शेरा)</label>
+          <input type="text" id="cert-purpose" placeholder="e.g. For School Admission / Scholarship / Ration Card / Bank Loan" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" />
+        </div>
+
+        <!-- Declaration -->
+        <div class="flex items-start gap-2 bg-amber-50 p-3 rounded-xl border border-amber-200">
+          <input type="checkbox" id="cert-declare" required class="mt-0.5 rounded text-gov-navy" />
+          <label for="cert-declare" class="text-[11px] text-amber-900 leading-tight">
+            I hereby certify that all information submitted herein is true and backed by legal proof. Any false declaration is punishable under the Panchayati Raj Act.
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2 flex items-center justify-between">
+          <a href="dashboard.html" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800">
+            &larr; Back to Dashboard
+          </a>
+          <button type="submit" id="btn-submit-cert" class="px-6 py-3 rounded-lg bg-gov-navy hover:bg-gov-navy-dark text-white font-bold text-xs uppercase tracking-wider shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Submit Application</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <!-- Success Modal with Acknowledgement Receipt -->
+  <div id="receipt-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <div class="text-center">
+        <h3 class="text-lg font-bold text-slate-800">Application Submitted Successfully!</h3>
+        <p class="text-xs text-slate-500 mt-1">Your certificate request has been queued for Gram Sevak verification.</p>
+      </div>
+
+      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+          <span class="text-slate-500">Application ID:</span>
+          <span id="receipt-app-id" class="font-mono font-bold text-gov-navy">GP-CERT-2026-XXXX</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Certificate Type:</span>
+          <span id="receipt-type" class="font-semibold text-slate-800">Income Certificate</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Applicant:</span>
+          <span id="receipt-applicant" class="font-semibold text-slate-800">Rajesh Patil</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Status:</span>
+          <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">Pending Review</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Estimated Processing:</span>
+          <span class="font-semibold text-emerald-700">2 - 3 Working Days</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <a href="my-certificates.html" class="flex-1 py-2.5 rounded-lg bg-gov-navy text-white text-xs font-bold text-center hover:bg-gov-navy-dark transition">
+          Track in My Certificates
+        </a>
+        <button onclick="document.getElementById('receipt-modal').classList.add('hidden')" class="px-4 py-2.5 rounded-lg bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300 transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let selectedCert = 'Income Certificate';
+
+      // Prefill if logged in
+      const user = window.auth.getUser();
+      if (user) {
+        document.getElementById('cert-name').value = user.name || '';
+        document.getElementById('cert-mobile').value = user.mobile || '';
+        document.getElementById('cert-ward').value = user.ward || 'Ward 1';
+        document.getElementById('cert-address').value = user.address || '';
+      }
+
+      const updateDynamicFields = () => {
+        const container = document.getElementById('dynamic-cert-fields');
+        const titleEl = document.getElementById('form-cert-title');
+        titleEl.textContent = `${selectedCert} Application Form`;
+
+        if (selectedCert === 'Income Certificate') {
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Annual Household Income (₹) <span class="text-rose-500">*</span></label>
+                <input type="number" id="field-income" placeholder="e.g. 75000" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Occupation / Source of Livelihood <span class="text-rose-500">*</span></label>
+                <select id="field-occupation" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required>
+                  <option value="Agriculture / Farmer">Agriculture / Farmer (शेतकरी)</option>
+                  <option value="Agricultural Laborer">Agricultural Laborer (शेतमजूर)</option>
+                  <option value="Small Business / Shop">Small Business / Shop (छोटे व्यावसायिक)</option>
+                  <option value="Private Service">Private Service (खाजगी नोकरी)</option>
+                  <option value="Self Employed / Artisan">Self Employed / Artisan (कारागीर)</option>
+                </select>
+              </div>
+            </div>
+          `;
+        } else if (selectedCert === 'Residence Certificate') {
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Years Living in Village <span class="text-rose-500">*</span></label>
+                <input type="number" id="field-years" placeholder="e.g. 15" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">House Ownership / Rent <span class="text-rose-500">*</span></label>
+                <select id="field-ownership" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required>
+                  <option value="Ancestral / Own House">Ancestral / Own House (स्वतःचे घर)</option>
+                  <option value="Rental Accommodation">Rental Accommodation (भाड्याचे घर)</option>
+                </select>
+              </div>
+            </div>
+          `;
+        } else if (selectedCert === 'Birth Certificate') {
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Date of Birth <span class="text-rose-500">*</span></label>
+                <input type="date" id="field-dob" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Place of Birth (Hospital / Home) <span class="text-rose-500">*</span></label>
+                <input type="text" id="field-pob" placeholder="e.g. PHC Rural Hospital" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Father's & Mother's Names <span class="text-rose-500">*</span></label>
+              <input type="text" id="field-parents" placeholder="e.g. Ramesh Patil & Sunita Patil" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+            </div>
+          `;
+        } else if (selectedCert === 'Death Certificate') {
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Date of Death <span class="text-rose-500">*</span></label>
+                <input type="date" id="field-dod" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Deceased Full Name <span class="text-rose-500">*</span></label>
+                <input type="text" id="field-deceased" placeholder="Full name of deceased" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+              </div>
+            </div>
+          `;
+        }
+      };
+
+      updateDynamicFields();
+
+      // Certificate switcher cards
+      document.querySelectorAll('.cert-select-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.cert-select-btn').forEach(b => {
+            b.classList.remove('border-gov-navy');
+            b.classList.add('border-slate-200');
+          });
+          btn.classList.add('border-gov-navy');
+          btn.classList.remove('border-slate-200');
+          selectedCert = btn.getAttribute('data-type');
+          updateDynamicFields();
+        });
+      });
+
+      // File upload preview label
+      const fileInput = document.getElementById('cert-doc-file');
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          document.getElementById('doc-file-name').innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-file-check mr-1"></i> ${fileInput.files[0].name}</span>`;
+        }
+      });
+
+      // Submit form
+      const form = document.getElementById('certificate-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const btn = document.getElementById('btn-submit-cert');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Submitting...';
+
+        const applicantName = document.getElementById('cert-name').value.trim();
+        const mobile = document.getElementById('cert-mobile').value.trim();
+        const aadhar = document.getElementById('cert-aadhar').value.trim();
+        const ward = document.getElementById('cert-ward').value;
+        const address = document.getElementById('cert-address').value.trim();
+        const purpose = document.getElementById('cert-purpose').value.trim();
+
+        // File upload handling
+        let uploadedDocUrl = "sample_document_attachment.pdf";
+        if (fileInput.files.length > 0) {
+          uploadedDocUrl = await window.db.uploadFile(fileInput.files[0], 'certificates');
+        }
+
+        const certPayload = {
+          certificateType: selectedCert,
+          applicantName,
+          mobile,
+          aadhar,
+          ward,
+          address,
+          purpose,
+          documentUrls: [uploadedDocUrl],
+          userId: user ? user.userId : 'guest_' + Date.now()
+        };
+
+        if (selectedCert === 'Income Certificate') {
+          certPayload.incomeAmount = document.getElementById('field-income')?.value || '60,000';
+          certPayload.occupation = document.getElementById('field-occupation')?.value || 'Agriculture';
+        } else if (selectedCert === 'Birth Certificate') {
+          certPayload.dob = document.getElementById('field-dob')?.value;
+          certPayload.placeOfBirth = document.getElementById('field-pob')?.value;
+          certPayload.parentName = document.getElementById('field-parents')?.value;
+        }
+
+        const newCert = await window.db.addCertificate(certPayload);
+
+        // Show receipt modal
+        document.getElementById('receipt-app-id').textContent = newCert.certificateId;
+        document.getElementById('receipt-type').textContent = newCert.certificateType;
+        document.getElementById('receipt-applicant').textContent = newCert.applicantName;
+        document.getElementById('receipt-modal').classList.remove('hidden');
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1.5"></i> Submit Application';
+        form.reset();
+        document.getElementById('doc-file-name').textContent = "Click to browse or drag and drop supporting document";
+      });
+    });
+  </script>
+</body>
+</html>

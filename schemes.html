@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government Welfare Schemes | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    
+    <!-- Title & Header Bar -->
+    <div class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-emerald-200">
+        <i class="fa-solid fa-hand-holding-dollar"></i> Direct Benefit Transfer & Subsidies
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gov-navy" data-i18n="schemesTitle">
+        Government Schemes Portal
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1" data-i18n="schemesSubtitle">
+        Explore central and state rural welfare schemes, check eligibility, and apply online
+      </p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="relative w-full sm:w-96">
+        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <i class="fa-solid fa-search text-xs"></i>
+        </span>
+        <input type="text" id="scheme-search-input" placeholder="Search by scheme name, subsidy, keyword..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gov-navy" />
+      </div>
+
+      <!-- Categories Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0" id="scheme-cat-filters">
+        <button class="cat-pill active px-3 py-1.5 rounded-lg text-xs font-bold bg-gov-navy text-white transition" data-category="All">All Categories</button>
+        <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition" data-category="Agriculture">Agriculture</button>
+        <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition" data-category="Housing">Housing</button>
+        <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition" data-category="Sanitation">Sanitation</button>
+        <button class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition" data-category="Women & Child">Women & Child</button>
+      </div>
+    </div>
+
+    <!-- Schemes Cards Grid -->
+    <div id="schemes-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Populated dynamically -->
+    </div>
+
+  </main>
+
+  <!-- Scheme Details & Apply Modal -->
+  <div id="scheme-detail-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      
+      <div class="bg-gov-navy p-5 text-white flex items-center justify-between border-b-2 border-gov-saffron">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-400 text-gov-navy flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+          </div>
+          <div>
+            <span id="modal-scheme-cat" class="text-[10px] font-extrabold uppercase bg-emerald-500 text-white px-2 py-0.5 rounded">Category</span>
+            <h3 id="modal-scheme-title" class="font-bold text-base mt-1 text-white">Scheme Name</h3>
+          </div>
+        </div>
+        <button onclick="document.getElementById('scheme-detail-modal').classList.add('hidden')" class="text-white/80 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-5 text-xs text-slate-700">
+        
+        <!-- Subsidy Highlight -->
+        <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-emerald-800 uppercase font-bold tracking-wider">Financial Benefit / Subsidy:</span>
+            <p id="modal-scheme-subsidy" class="text-sm font-extrabold text-emerald-900 mt-0.5">₹1,20,000 + MGNREGA</p>
+          </div>
+          <span class="text-xs text-emerald-700 font-semibold"><i class="fa-solid fa-shield-check mr-1"></i> DBT Direct Transfer</span>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h5 class="font-bold text-slate-800 mb-1 text-sm">About the Scheme:</h5>
+          <p id="modal-scheme-desc" class="text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100"></p>
+        </div>
+
+        <!-- Eligibility -->
+        <div>
+          <h5 class="font-bold text-slate-800 mb-1 text-sm flex items-center gap-1.5 text-gov-navy">
+            <i class="fa-solid fa-user-check"></i>
+            <span data-i18n="lblEligibility">Eligibility Criteria:</span>
+          </h5>
+          <p id="modal-scheme-eligibility" class="text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100"></p>
+        </div>
+
+        <!-- Required Documents -->
+        <div>
+          <h5 class="font-bold text-slate-800 mb-1 text-sm flex items-center gap-1.5 text-gov-navy">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span data-i18n="lblDocuments">Required Documents:</span>
+          </h5>
+          <p id="modal-scheme-docs" class="text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100"></p>
+        </div>
+
+        <!-- Last Date -->
+        <div class="flex items-center justify-between p-3 bg-amber-50 rounded-xl border border-amber-200">
+          <span class="font-semibold text-amber-900"><i class="fa-regular fa-clock mr-1"></i> Application Deadline:</span>
+          <span id="modal-scheme-deadline" class="font-bold text-amber-900">2026-12-31</span>
+        </div>
+
+      </div>
+
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <button onclick="document.getElementById('scheme-detail-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300 transition">
+          Close
+        </button>
+        <button onclick="window.applyForSchemeNow()" class="px-5 py-2.5 rounded-lg bg-gov-saffron hover:bg-amber-600 text-white text-xs font-bold shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Submit Direct Application</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    let activeScheme = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const schemes = await window.db.getSchemes();
+      const container = document.getElementById('schemes-grid-container');
+      const searchInput = document.getElementById('scheme-search-input');
+      let currentCategory = 'All';
+
+      const render = () => {
+        const query = searchInput.value.toLowerCase().trim();
+
+        const filtered = schemes.filter(s => {
+          const matchQuery = s.schemeName.toLowerCase().includes(query) ||
+                             s.description.toLowerCase().includes(query) ||
+                             s.eligibility.toLowerCase().includes(query);
+          const matchCat = currentCategory === 'All' || s.category === currentCategory;
+          return matchQuery && matchCat;
+        });
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="col-span-full bg-white p-12 text-center rounded-2xl border border-slate-200">
+              <i class="fa-solid fa-hand-holding-dollar text-4xl text-slate-300 mb-3"></i>
+              <h4 class="font-bold text-sm text-slate-700">No Schemes Match Filter</h4>
+              <p class="text-xs text-slate-500 mt-1">Try another search keyword or select All Categories.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(s => `
+          <div class="gov-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                  ${s.category}
+                </span>
+                <span class="text-xs font-bold text-emerald-700">${s.subsidy || 'Financial Grant'}</span>
+              </div>
+
+              <h3 class="font-bold text-base text-slate-800 mb-2">${s.schemeName}</h3>
+              <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4">${s.description}</p>
+
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1.5 text-xs">
+                <p><strong>Eligibility:</strong> <span class="text-slate-600">${s.eligibility.slice(0, 90)}...</span></p>
+                <p><strong>Deadline:</strong> <span class="text-amber-700 font-bold">${s.lastDate}</span></p>
+              </div>
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <button onclick="window.openSchemeModal('${s.schemeId}')" class="w-full py-2.5 rounded-lg bg-gov-navy hover:bg-gov-navy-dark text-white text-xs font-bold transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-circle-info"></i>
+                <span data-i18n="btnViewDetails">View Details & Apply</span>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      };
+
+      render();
+      searchInput.addEventListener('input', render);
+
+      // Category filter pills
+      document.querySelectorAll('.cat-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.cat-pill').forEach(p => {
+            p.classList.remove('active', 'bg-gov-navy', 'text-white');
+            p.classList.add('bg-slate-100', 'text-slate-700');
+          });
+          pill.classList.add('active', 'bg-gov-navy', 'text-white');
+          pill.classList.remove('bg-slate-100', 'text-slate-700');
+          currentCategory = pill.getAttribute('data-category');
+          render();
+        });
+      });
+    });
+
+    window.openSchemeModal = async (schemeId) => {
+      const schemes = await window.db.getSchemes();
+      const s = schemes.find(item => item.schemeId === schemeId);
+      if (!s) return;
+
+      activeScheme = s;
+      document.getElementById('modal-scheme-cat').textContent = s.category;
+      document.getElementById('modal-scheme-title').textContent = s.schemeName;
+      document.getElementById('modal-scheme-subsidy').textContent = s.subsidy || 'Government Subsidy / Direct Benefit Transfer';
+      document.getElementById('modal-scheme-desc').textContent = s.description;
+      document.getElementById('modal-scheme-eligibility').textContent = s.eligibility;
+      document.getElementById('modal-scheme-docs').textContent = s.requiredDocuments;
+      document.getElementById('modal-scheme-deadline').textContent = s.lastDate;
+
+      document.getElementById('scheme-detail-modal').classList.remove('hidden');
+    };
+
+    window.applyForSchemeNow = () => {
+      if (!activeScheme) return;
+      const user = window.auth.getUser();
+      if (!user) {
+        window.ui.showToast('Please sign in or register to submit a scheme application.', 'warning');
+        setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+        return;
+      }
+
+      document.getElementById('scheme-detail-modal').classList.add('hidden');
+      window.ui.showToast(`Application expression submitted for ${activeScheme.schemeName}! Panchayat desk will contact you.`, 'success');
+    };
+  </script>
+</body>
+</html>

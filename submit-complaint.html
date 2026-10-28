@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Grievance Portal | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+    
+    <!-- Title Header -->
+    <div class="mb-8 text-center sm:text-left">
+      <div class="inline-flex items-center gap-2 bg-amber-50 text-amber-800 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-amber-200">
+        <i class="fa-solid fa-bullhorn"></i> Citizen Redressal System
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gov-navy" data-i18n="complaintPortalTitle">
+        Public Grievance Portal
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1" data-i18n="complaintPortalSubtitle">
+        Register your village civic issues for fast resolution by the Panchayat
+      </p>
+    </div>
+
+    <!-- Complaint Form Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      
+      <div class="bg-gov-navy px-6 py-4 text-white flex items-center justify-between border-b-2 border-gov-saffron">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+          <h3 class="font-bold text-sm">Grievance Registration Form</h3>
+        </div>
+        <span class="text-[11px] bg-white/20 px-2.5 py-0.5 rounded-full font-medium">Fast Track Redressal</span>
+      </div>
+
+      <form id="complaint-form" class="p-6 sm:p-8 space-y-6">
+        
+        <!-- Category & Title -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Complaint Category (तक्रार वर्गवारी) <span class="text-rose-500">*</span>
+            </label>
+            <select id="cmp-category" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy bg-white" required>
+              <option value="Water Supply">Water Supply (पिण्याचे पाणी)</option>
+              <option value="Roads">Roads & Potholes (रस्ते व खड्डे)</option>
+              <option value="Electricity">Electricity & Street Lights (विद्युत व दिवाबत्ती)</option>
+              <option value="Sanitation">Sanitation & Cleanliness (स्वच्छता)</option>
+              <option value="Drainage">Drainage & Sewage (सांडपाणी व गटारे)</option>
+              <option value="Waste Management">Waste Management (कचरा व्यवस्थापन)</option>
+              <option value="Street Lights">Street Lights (पथदिवे दुरुस्ती)</option>
+              <option value="Other">Other Civic Issues (इतर नागरी समस्या)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Complaint Title (तक्रारीचे शीर्षक) <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="cmp-title" placeholder="Brief summary of the issue" class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+          </div>
+        </div>
+
+        <!-- Location & Landmark with Geolocation Simulation -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-semibold text-slate-700">
+              Village Location / Galli / Landmark (ठिकाण / परिसर) <span class="text-rose-500">*</span>
+            </label>
+            <button type="button" id="btn-use-location" class="text-[11px] text-gov-navy hover:text-gov-saffron font-bold flex items-center gap-1 transition">
+              <i class="fa-solid fa-location-crosshairs text-amber-500"></i>
+              <span>Use My GPS Location</span>
+            </button>
+          </div>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-map-pin text-xs"></i>
+            </span>
+            <input type="text" id="cmp-location" placeholder="e.g. Near Ganpati Temple, Ward No. 2, Market Road" class="w-full pl-9 pr-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            Detailed Description of Issue (समस्येचे सविस्तर वर्णन) <span class="text-rose-500">*</span>
+          </label>
+          <textarea id="cmp-desc" rows="4" placeholder="Describe when the issue started, severity, how many households are affected, etc." class="w-full px-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required></textarea>
+        </div>
+
+        <!-- Photo / Evidence Upload -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            Upload Evidence Photo / Document (समस्येचा फोटो / पुरावा जोडा)
+          </label>
+          <p class="text-[11px] text-slate-500 mb-2">Adding a clear photo helps Panchayat field staff inspect and resolve the issue faster.</p>
+
+          <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-gov-navy transition bg-slate-50 cursor-pointer" onclick="document.getElementById('cmp-image-file').click()">
+            <input type="file" id="cmp-image-file" class="hidden" accept="image/*,.pdf" />
+            
+            <div id="image-preview-box" class="space-y-2">
+              <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-camera"></i>
+              </div>
+              <p id="image-preview-label" class="text-xs font-semibold text-slate-700">Click to upload photo or capture using mobile camera</p>
+              <p class="text-[10px] text-slate-400">PNG, JPG, JPEG up to 10MB</p>
+            </div>
+
+            <img id="cmp-img-thumb" class="hidden mx-auto max-h-48 rounded-lg shadow-sm border mt-2 object-cover" alt="Uploaded Preview" />
+          </div>
+        </div>
+
+        <!-- Complainant Contact Verification -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Your Full Name</label>
+            <input type="text" id="cmp-user-name" placeholder="Name for SMS updates" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Your Mobile Number</label>
+            <input type="tel" id="cmp-user-mobile" placeholder="10-digit number" pattern="[0-9]{10}" maxlength="10" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white" required />
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="pt-2 flex items-center justify-between">
+          <a href="dashboard.html" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800">
+            &larr; Back to Dashboard
+          </a>
+          <button type="submit" id="btn-submit-cmp" class="px-6 py-3 rounded-lg bg-gov-saffron hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Submit Complaint</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <!-- Success Modal with Complaint ID -->
+  <div id="cmp-success-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <div class="text-center">
+        <h3 class="text-lg font-bold text-slate-800">Complaint Registered Successfully!</h3>
+        <p class="text-xs text-slate-500 mt-1">Your grievance has been assigned to the Gram Panchayat maintenance department.</p>
+      </div>
+
+      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+          <span class="text-slate-500">Grievance Ticket ID:</span>
+          <span id="receipt-cmp-id" class="font-mono font-bold text-gov-navy">GP-CMP-2026-XXXX</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Category:</span>
+          <span id="receipt-cmp-category" class="font-semibold text-slate-800">Water Supply</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Status:</span>
+          <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">Submitted</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">Action Officer:</span>
+          <span class="font-semibold text-slate-700">Gram Sevak / Sanitary Inspector</span>
+        </div>
+      </div>
+
+      <!-- Complaint Workflow Stepper Preview -->
+      <div class="py-2">
+        <div class="flex items-center justify-between max-w-xs mx-auto text-center text-[10px] font-semibold text-slate-600">
+          <div class="flex flex-col items-center">
+            <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center mb-1">1</span>
+            <span>Submitted</span>
+          </div>
+          <div class="h-0.5 bg-slate-200 flex-1 mx-1"></div>
+          <div class="flex flex-col items-center opacity-60">
+            <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mb-1">2</span>
+            <span>Review</span>
+          </div>
+          <div class="h-0.5 bg-slate-200 flex-1 mx-1"></div>
+          <div class="flex flex-col items-center opacity-60">
+            <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mb-1">3</span>
+            <span>In Progress</span>
+          </div>
+          <div class="h-0.5 bg-slate-200 flex-1 mx-1"></div>
+          <div class="flex flex-col items-center opacity-60">
+            <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center mb-1">4</span>
+            <span>Resolved</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <a href="my-complaints.html" class="flex-1 py-2.5 rounded-lg bg-gov-navy text-white text-xs font-bold text-center hover:bg-gov-navy-dark transition">
+          Track in My Complaints
+        </a>
+        <button onclick="document.getElementById('cmp-success-modal').classList.add('hidden')" class="px-4 py-2.5 rounded-lg bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300 transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.auth.getUser();
+      if (user) {
+        document.getElementById('cmp-user-name').value = user.name || '';
+        document.getElementById('cmp-user-mobile').value = user.mobile || '';
+      }
+
+      // Geolocation button simulation
+      document.getElementById('btn-use-location').addEventListener('click', () => {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const locStr = `Lat: ${pos.coords.latitude.toFixed(4)}, Long: ${pos.coords.longitude.toFixed(4)} (Village Ward Area)`;
+              document.getElementById('cmp-location').value = locStr;
+              window.ui.showToast('GPS coordinates captured!', 'success');
+            },
+            () => {
+              document.getElementById('cmp-location').value = "Ward No. 2, Ambedkar Chowk (Detected Area)";
+              window.ui.showToast('Simulated location set for village territory.', 'info');
+            }
+          );
+        } else {
+          document.getElementById('cmp-location').value = "Ward No. 1, Main Bazaar Chowk";
+        }
+      });
+
+      // Photo upload preview
+      const fileInput = document.getElementById('cmp-image-file');
+      const previewThumb = document.getElementById('cmp-img-thumb');
+      const previewLabel = document.getElementById('image-preview-label');
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          previewLabel.textContent = `Attached: ${file.name}`;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            previewThumb.src = e.target.result;
+            previewThumb.classList.remove('hidden');
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Submit complaint
+      const form = document.getElementById('complaint-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const btn = document.getElementById('btn-submit-cmp');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Registering...';
+
+        const category = document.getElementById('cmp-category').value;
+        const title = document.getElementById('cmp-title').value.trim();
+        const location = document.getElementById('cmp-location').value.trim();
+        const description = document.getElementById('cmp-desc').value.trim();
+        const userName = document.getElementById('cmp-user-name').value.trim();
+        const userMobile = document.getElementById('cmp-user-mobile').value.trim();
+
+        // Image upload handling
+        let imageUrl = "https://images.unsplash.com/photo-1516245834210-c4c142787335?auto=format&fit=crop&w=600&q=80";
+        if (fileInput.files.length > 0) {
+          imageUrl = await window.db.uploadFile(fileInput.files[0], 'complaints');
+        }
+
+        const complaintPayload = {
+          category,
+          title,
+          location,
+          description,
+          userName,
+          userMobile,
+          imageUrl,
+          userId: user ? user.userId : 'guest_' + Date.now()
+        };
+
+        const newCmp = await window.db.addComplaint(complaintPayload);
+
+        // Show success modal
+        document.getElementById('receipt-cmp-id').textContent = newCmp.complaintId;
+        document.getElementById('receipt-cmp-category').textContent = newCmp.category;
+        document.getElementById('cmp-success-modal').classList.remove('hidden');
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-bullhorn mr-2"></i> Submit Complaint';
+        form.reset();
+        previewThumb.classList.add('hidden');
+        previewLabel.textContent = "Click to upload photo or capture using mobile camera";
+      });
+    });
+  </script>
+</body>
+</html>

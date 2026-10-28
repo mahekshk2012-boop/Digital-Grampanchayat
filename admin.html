@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    
+    <!-- Admin Header Banner -->
+    <div class="bg-gov-navy text-white rounded-2xl p-6 mb-8 shadow-md border-b-4 border-gov-saffron flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 text-amber-400 flex items-center justify-center text-2xl shadow">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-extrabold" data-i18n="adminPortalTitle">
+              Panchayat Administrative Console
+            </h1>
+            <span class="bg-purple-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wider">
+              ADMIN SECURE
+            </span>
+          </div>
+          <p class="text-xs text-amber-200 mt-0.5">
+            Logged in as: <strong id="admin-user-name">Gram Sevak / Development Officer</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Demo Reset / Actions -->
+      <div class="flex items-center gap-2">
+        <button onclick="window.resetDatabaseSeed()" class="px-3.5 py-2 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-semibold border border-white/20 transition flex items-center gap-1.5" title="Re-seeds sample complaints and certificates for demo">
+          <i class="fa-solid fa-arrows-rotate text-amber-300"></i>
+          <span>Reset Demo Data</span>
+        </button>
+        <button onclick="window.auth.logout()" class="px-3.5 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 7 Admin KPI Cards (Section 14) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-8 text-center">
+      
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-slate-500 font-medium">Total Users</p>
+        <h4 id="adm-stat-users" class="text-xl font-bold text-gov-navy mt-0.5">0</h4>
+      </div>
+
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-slate-500 font-medium">Complaints</p>
+        <h4 id="adm-stat-complaints" class="text-xl font-bold text-slate-800 mt-0.5">0</h4>
+      </div>
+
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-amber-600 font-medium">Pending</p>
+        <h4 id="adm-stat-pending" class="text-xl font-bold text-amber-600 mt-0.5">0</h4>
+      </div>
+
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-emerald-600 font-medium">Resolved</p>
+        <h4 id="adm-stat-resolved" class="text-xl font-bold text-emerald-600 mt-0.5">0</h4>
+      </div>
+
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-purple-600 font-medium">Certificates</p>
+        <h4 id="adm-stat-certs" class="text-xl font-bold text-purple-700 mt-0.5">0</h4>
+      </div>
+
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-blue-600 font-medium">Schemes</p>
+        <h4 id="adm-stat-schemes" class="text-xl font-bold text-blue-600 mt-0.5">0</h4>
+      </div>
+
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-[11px] text-rose-600 font-medium">Notices</p>
+        <h4 id="adm-stat-announcements" class="text-xl font-bold text-rose-600 mt-0.5">0</h4>
+      </div>
+
+    </div>
+
+    <!-- Admin Tabs Bar -->
+    <div class="border-b border-slate-200 mb-6 flex items-center gap-2 overflow-x-auto">
+      <button class="admin-tab-btn active px-4 py-2.5 font-bold text-xs border-b-2 border-gov-navy text-gov-navy flex items-center gap-2" data-tab="adm-complaints">
+        <i class="fa-solid fa-bullhorn"></i>
+        <span>Manage Complaints</span>
+      </button>
+
+      <button class="admin-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="adm-certificates">
+        <i class="fa-solid fa-certificate"></i>
+        <span>Manage Certificates</span>
+      </button>
+
+      <button class="admin-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="adm-schemes">
+        <i class="fa-solid fa-hand-holding-heart"></i>
+        <span>Manage Schemes</span>
+      </button>
+
+      <button class="admin-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="adm-announcements">
+        <i class="fa-solid fa-newspaper"></i>
+        <span>Manage Notices</span>
+      </button>
+
+      <button class="admin-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="adm-users">
+        <i class="fa-solid fa-users"></i>
+        <span>Citizen Directory</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: MANAGE COMPLAINTS -->
+    <div id="adm-complaints" class="admin-tab-content space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Public Grievance Management</h3>
+          <p class="text-xs text-slate-500">Review reported issues, assign field technicians, update status and write officer remarks</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase font-semibold text-[11px]">
+            <tr>
+              <th class="p-3.5">Ticket ID</th>
+              <th class="p-3.5">Category</th>
+              <th class="p-3.5">Title & Location</th>
+              <th class="p-3.5">Citizen</th>
+              <th class="p-3.5">Status</th>
+              <th class="p-3.5 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="adm-complaints-tbody" class="divide-y divide-slate-100">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: MANAGE CERTIFICATES -->
+    <div id="adm-certificates" class="admin-tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Certificate Applications Processing</h3>
+          <p class="text-xs text-slate-500">Scrutinize citizen applications, review documents, Approve or Reject with remarks</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase font-semibold text-[11px]">
+            <tr>
+              <th class="p-3.5">App ID</th>
+              <th class="p-3.5">Certificate Type</th>
+              <th class="p-3.5">Applicant Details</th>
+              <th class="p-3.5">Ward / Income</th>
+              <th class="p-3.5">Status</th>
+              <th class="p-3.5 text-right">Decision</th>
+            </tr>
+          </thead>
+          <tbody id="adm-certificates-tbody" class="divide-y divide-slate-100">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: MANAGE SCHEMES -->
+    <div id="adm-schemes" class="admin-tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Government Welfare Schemes</h3>
+          <p class="text-xs text-slate-500">Publish, update eligibility, and manage rural welfare schemes</p>
+        </div>
+        <button onclick="window.openAddSchemeModal()" class="px-3.5 py-2 rounded-lg bg-gov-navy text-white text-xs font-bold hover:bg-gov-navy-dark transition flex items-center gap-1.5">
+          <i class="fa-solid fa-plus"></i> Add New Scheme
+        </button>
+      </div>
+
+      <div id="adm-schemes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Dynamic schemes -->
+      </div>
+    </div>
+
+    <!-- TAB 4: MANAGE ANNOUNCEMENTS -->
+    <div id="adm-announcements" class="admin-tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Official Notices & Circulars</h3>
+          <p class="text-xs text-slate-500">Publish Gram Sabha notices, emergency broadcasts, and village circulars</p>
+        </div>
+        <button onclick="window.openAddNoticeModal()" class="px-3.5 py-2 rounded-lg bg-gov-navy text-white text-xs font-bold hover:bg-gov-navy-dark transition flex items-center gap-1.5">
+          <i class="fa-solid fa-plus"></i> Post New Announcement
+        </button>
+      </div>
+
+      <div id="adm-announcements-list" class="space-y-3">
+        <!-- Dynamic notices -->
+      </div>
+    </div>
+
+    <!-- TAB 5: CITIZEN DIRECTORY -->
+    <div id="adm-users" class="admin-tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Registered Citizen Directory</h3>
+          <p class="text-xs text-slate-500">View registered villagers, phone numbers, and ward allocations</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase font-semibold text-[11px]">
+            <tr>
+              <th class="p-3.5">User ID</th>
+              <th class="p-3.5">Full Name</th>
+              <th class="p-3.5">Email</th>
+              <th class="p-3.5">Mobile</th>
+              <th class="p-3.5">Ward / Address</th>
+              <th class="p-3.5">Role</th>
+            </tr>
+          </thead>
+          <tbody id="adm-users-tbody" class="divide-y divide-slate-100">
+            <!-- Dynamic users -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Edit Complaint Status Modal -->
+  <div id="adm-cmp-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h3 class="font-bold text-sm text-gov-navy">Update Grievance Status & Remarks</h3>
+          <p id="adm-modal-cmp-id" class="text-xs text-slate-500 font-mono">GP-CMP-2026-XXXX</p>
+        </div>
+        <button onclick="document.getElementById('adm-cmp-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="adm-cmp-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Update Status:</label>
+          <select id="adm-modal-cmp-status" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white" required>
+            <option value="Submitted">Submitted (दाखल)</option>
+            <option value="Under Review">Under Review (तपासणी सुरू)</option>
+            <option value="In Progress">In Progress (दुरुस्ती काम सुरू)</option>
+            <option value="Resolved">Resolved (निवारण झाले)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Official Officer Remarks (अधिकाऱ्यांचा शेरा):</label>
+          <textarea id="adm-modal-cmp-remarks" rows="3" placeholder="Enter inspection details, dispatched technician name, resolution report..." class="w-full px-3 py-2 border border-slate-300 rounded-lg" required></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="document.getElementById('adm-cmp-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-gov-navy text-white font-bold hover:bg-gov-navy-dark">Save & Update Ticket</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Certificate Decision Modal -->
+  <div id="adm-cert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h3 class="font-bold text-sm text-gov-navy">Scrutinize Certificate Application</h3>
+          <p id="adm-modal-cert-id" class="text-xs text-slate-500 font-mono">GP-CERT-2026-XXXX</p>
+        </div>
+        <button onclick="document.getElementById('adm-cert-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="adm-cert-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Administrative Decision:</label>
+          <select id="adm-modal-cert-decision" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white" required>
+            <option value="Under Review">Under Review (कागदपत्रे तपासणी सुरू)</option>
+            <option value="Approved">Approve & Issue Certificate (दाखला मंजूर करा)</option>
+            <option value="Rejected">Reject Application (दाखला नाकारण्यात यावा)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Official Verification Remarks / Note:</label>
+          <textarea id="adm-modal-cert-remarks" rows="3" placeholder="e.g. Verified with village register / Talathi record. Issued valid for 1 year." class="w-full px-3 py-2 border border-slate-300 rounded-lg" required></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="document.getElementById('adm-cert-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700">Save Decision</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Scheme Modal -->
+  <div id="adm-add-scheme-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <h3 class="font-bold text-sm text-gov-navy">Publish New Government Scheme</h3>
+        <button onclick="document.getElementById('adm-add-scheme-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form id="adm-scheme-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Scheme Name</label>
+          <input type="text" id="new-sch-name" placeholder="e.g. Mukhyamantri Solar Pump Yojana" class="w-full px-3 py-2 border rounded-lg" required />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Category</label>
+            <select id="new-sch-cat" class="w-full px-3 py-2 border rounded-lg bg-white">
+              <option value="Agriculture">Agriculture</option>
+              <option value="Housing">Housing</option>
+              <option value="Sanitation">Sanitation</option>
+              <option value="Women & Child">Women & Child</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Subsidy / Benefit</label>
+            <input type="text" id="new-sch-subsidy" placeholder="e.g. 90% Capital Subsidy" class="w-full px-3 py-2 border rounded-lg" required />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Description</label>
+          <textarea id="new-sch-desc" rows="2" class="w-full px-3 py-2 border rounded-lg" required></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Eligibility</label>
+          <input type="text" id="new-sch-eligibility" class="w-full px-3 py-2 border rounded-lg" required />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Required Documents</label>
+          <input type="text" id="new-sch-docs" placeholder="Aadhaar, 7/12 Extract, Bank Passbook" class="w-full px-3 py-2 border rounded-lg" required />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Last Date</label>
+          <input type="text" id="new-sch-lastdate" placeholder="e.g. 2026-12-31 or Ongoing" class="w-full px-3 py-2 border rounded-lg" required />
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('adm-add-scheme-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-200">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-gov-navy text-white font-bold">Publish Scheme</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Announcement Modal -->
+  <div id="adm-add-notice-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <h3 class="font-bold text-sm text-gov-navy">Broadcast Official Announcement</h3>
+        <button onclick="document.getElementById('adm-add-notice-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <form id="adm-notice-form" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Notice Title</label>
+          <input type="text" id="new-notice-title" placeholder="Notice heading..." class="w-full px-3 py-2 border rounded-lg" required />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Category</label>
+            <select id="new-notice-cat" class="w-full px-3 py-2 border rounded-lg bg-white">
+              <option value="Gram Sabha">Gram Sabha</option>
+              <option value="Water Supply">Water Supply</option>
+              <option value="Electricity">Electricity</option>
+              <option value="Public Health">Public Health</option>
+              <option value="Sanitation">Sanitation</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Date</label>
+            <input type="date" id="new-notice-date" class="w-full px-3 py-2 border rounded-lg" required />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Circular Content</label>
+          <textarea id="new-notice-desc" rows="3" class="w-full px-3 py-2 border rounded-lg" required></textarea>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="new-notice-important" class="rounded text-rose-600" />
+          <label for="new-notice-important" class="text-rose-600 font-bold">Mark as URGENT / Important Public Notice</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('adm-add-notice-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-200">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-gov-navy text-white font-bold">Post Notice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    let activeEditingCmpId = null;
+    let activeEditingCertId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Enforce Admin route guard
+      const isAllowed = window.auth.enforceRouteGuard('admin');
+      if (!isAllowed) return;
+
+      const user = window.auth.getUser();
+      if (user) {
+        document.getElementById('admin-user-name').textContent = user.name || 'Admin Officer';
+      }
+
+      // Tab switcher
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.admin-tab-btn').forEach(b => {
+            b.classList.remove('border-gov-navy', 'text-gov-navy', 'active');
+            b.classList.add('border-transparent', 'text-slate-500');
+          });
+          btn.classList.add('border-gov-navy', 'text-gov-navy', 'active');
+          btn.classList.remove('border-transparent', 'text-slate-500');
+
+          const tabId = btn.getAttribute('data-tab');
+          document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.add('hidden'));
+          document.getElementById(tabId).classList.remove('hidden');
+        });
+      });
+
+      await refreshAllData();
+    });
+
+    async function refreshAllData() {
+      const users = await window.db.getUsers();
+      const complaints = await window.db.getComplaints();
+      const certs = await window.db.getCertificates();
+      const schemes = await window.db.getSchemes();
+      const notices = await window.db.getAnnouncements();
+
+      // Stats
+      document.getElementById('adm-stat-users').textContent = users.length + 12450;
+      document.getElementById('adm-stat-complaints').textContent = complaints.length;
+      document.getElementById('adm-stat-pending').textContent = complaints.filter(c => c.status !== 'Resolved').length;
+      document.getElementById('adm-stat-resolved').textContent = complaints.filter(c => c.status === 'Resolved').length;
+      document.getElementById('adm-stat-certs').textContent = certs.length;
+      document.getElementById('adm-stat-schemes').textContent = schemes.length;
+      document.getElementById('adm-stat-announcements').textContent = notices.length;
+
+      // Render Complaints Table
+      const cmpTbody = document.getElementById('adm-complaints-tbody');
+      cmpTbody.innerHTML = complaints.map(c => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3.5 font-mono font-bold text-gov-navy">${c.complaintId}</td>
+          <td class="p-3.5 font-semibold text-slate-700">${c.category}</td>
+          <td class="p-3.5">
+            <p class="font-bold text-slate-800">${c.title}</p>
+            <p class="text-[11px] text-slate-500">${c.location}</p>
+          </td>
+          <td class="p-3.5">
+            <p class="font-semibold text-slate-700">${c.userName || 'Citizen'}</p>
+            <p class="text-[10px] text-slate-400">${c.userMobile || ''}</p>
+          </td>
+          <td class="p-3.5">
+            <span class="badge-${c.status.toLowerCase().replace(' ', '')} px-2 py-0.5 rounded text-[10px] font-bold">
+              ${c.status}
+            </span>
+          </td>
+          <td class="p-3.5 text-right">
+            <button onclick="window.openEditCmpModal('${c.complaintId}')" class="px-2.5 py-1.5 rounded-lg bg-gov-navy hover:bg-gov-navy-dark text-white font-bold text-[11px] transition">
+              Update Status
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Render Certificates Table
+      const certTbody = document.getElementById('adm-certificates-tbody');
+      certTbody.innerHTML = certs.map(c => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3.5 font-mono font-bold text-gov-navy">${c.certificateId}</td>
+          <td class="p-3.5 font-bold text-slate-800">${c.certificateType}</td>
+          <td class="p-3.5">
+            <p class="font-semibold text-slate-700">${c.applicantName}</p>
+            <p class="text-[10px] text-slate-400">${c.mobile || ''} | Aadhaar: ${c.aadhar || 'Verified'}</p>
+          </td>
+          <td class="p-3.5">
+            <p class="font-semibold text-slate-700">${c.ward || 'Ward 1'}</p>
+            <p class="text-[10px] text-emerald-700 font-bold">${c.incomeAmount ? '₹' + c.incomeAmount : 'Verified Resident'}</p>
+          </td>
+          <td class="p-3.5">
+            <span class="badge-${c.status.toLowerCase().replace(' ', '')} px-2 py-0.5 rounded text-[10px] font-bold">
+              ${c.status}
+            </span>
+          </td>
+          <td class="p-3.5 text-right">
+            <button onclick="window.openEditCertModal('${c.certificateId}')" class="px-2.5 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-bold text-[11px] transition">
+              Scrutinize
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Render Schemes Grid
+      const schemesList = document.getElementById('adm-schemes-list');
+      schemesList.innerHTML = schemes.map(s => `
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-700">${s.category}</span>
+              <span class="text-xs font-bold text-emerald-700">${s.subsidy || 'DBT Grant'}</span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-800">${s.schemeName}</h4>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">${s.description}</p>
+            <p class="text-[11px] text-amber-700 font-semibold mt-2">Deadline: ${s.lastDate}</p>
+          </div>
+          <div class="pt-3 mt-3 border-t border-slate-100 flex justify-end">
+            <button onclick="window.deleteScheme('${s.schemeId}')" class="text-rose-600 hover:text-rose-800 text-xs font-bold">
+              <i class="fa-solid fa-trash-can mr-1"></i> Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Render Notices List
+      const noticesList = document.getElementById('adm-announcements-list');
+      noticesList.innerHTML = notices.map(n => `
+        <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${n.important ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'}">${n.category}</span>
+              <span class="text-[11px] text-slate-400">${n.date}</span>
+              ${n.important ? '<span class="text-[9px] font-black bg-rose-600 text-white px-1.5 py-0.2 rounded">URGENT</span>' : ''}
+            </div>
+            <h4 class="font-bold text-xs text-slate-800">${n.title}</h4>
+            <p class="text-xs text-slate-500 line-clamp-1">${n.description}</p>
+          </div>
+          <button onclick="window.deleteNotice('${n.announcementId}')" class="text-rose-600 hover:text-rose-800 text-xs font-bold shrink-0">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `).join('');
+
+      // Render Users Table
+      const usersTbody = document.getElementById('adm-users-tbody');
+      usersTbody.innerHTML = users.map(u => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3.5 font-mono text-slate-500">${u.userId}</td>
+          <td class="p-3.5 font-bold text-slate-800">${u.name}</td>
+          <td class="p-3.5 text-slate-600">${u.email}</td>
+          <td class="p-3.5 text-slate-600">${u.mobile || '-'}</td>
+          <td class="p-3.5 text-slate-600">${u.ward || 'Ward 1'} - ${u.address || ''}</td>
+          <td class="p-3.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700'}">
+              ${u.role}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Modal Triggers
+    window.openEditCmpModal = async (cmpId) => {
+      activeEditingCmpId = cmpId;
+      const cmp = await window.db.getComplaintById(cmpId);
+      if (!cmp) return;
+      document.getElementById('adm-modal-cmp-id').textContent = cmp.complaintId;
+      document.getElementById('adm-modal-cmp-status').value = cmp.status;
+      document.getElementById('adm-modal-cmp-remarks').value = cmp.officerRemarks || '';
+      document.getElementById('adm-cmp-modal').classList.remove('hidden');
+    };
+
+    document.getElementById('adm-cmp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('adm-modal-cmp-status').value;
+      const remarks = document.getElementById('adm-modal-cmp-remarks').value;
+      await window.db.updateComplaintStatus(activeEditingCmpId, status, remarks);
+      document.getElementById('adm-cmp-modal').classList.add('hidden');
+      window.ui.showToast('Complaint status updated successfully!', 'success');
+      await refreshAllData();
+    });
+
+    window.openEditCertModal = async (certId) => {
+      activeEditingCertId = certId;
+      const cert = await window.db.getCertificateById(certId);
+      if (!cert) return;
+      document.getElementById('adm-modal-cert-id').textContent = `${cert.certificateId} (${cert.certificateType})`;
+      document.getElementById('adm-modal-cert-decision').value = cert.status === 'Pending' ? 'Under Review' : cert.status;
+      document.getElementById('adm-modal-cert-remarks').value = cert.adminRemarks || '';
+      document.getElementById('adm-cert-modal').classList.remove('hidden');
+    };
+
+    document.getElementById('adm-cert-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('adm-modal-cert-decision').value;
+      const remarks = document.getElementById('adm-modal-cert-remarks').value;
+      await window.db.updateCertificateStatus(activeEditingCertId, status, remarks);
+      document.getElementById('adm-cert-modal').classList.add('hidden');
+      window.ui.showToast(`Certificate application marked as ${status}!`, 'success');
+      await refreshAllData();
+    });
+
+    window.openAddSchemeModal = () => {
+      document.getElementById('adm-add-scheme-modal').classList.remove('hidden');
+    };
+
+    document.getElementById('adm-scheme-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await window.db.addScheme({
+        schemeName: document.getElementById('new-sch-name').value.trim(),
+        category: document.getElementById('new-sch-cat').value,
+        subsidy: document.getElementById('new-sch-subsidy').value.trim(),
+        description: document.getElementById('new-sch-desc').value.trim(),
+        eligibility: document.getElementById('new-sch-eligibility').value.trim(),
+        requiredDocuments: document.getElementById('new-sch-docs').value.trim(),
+        lastDate: document.getElementById('new-sch-lastdate').value.trim()
+      });
+      document.getElementById('adm-add-scheme-modal').classList.add('hidden');
+      window.ui.showToast('New government scheme published!', 'success');
+      await refreshAllData();
+    });
+
+    window.deleteScheme = async (id) => {
+      if (confirm('Are you sure you want to delete this scheme?')) {
+        await window.db.deleteScheme(id);
+        window.ui.showToast('Scheme deleted.', 'info');
+        await refreshAllData();
+      }
+    };
+
+    window.openAddNoticeModal = () => {
+      document.getElementById('new-notice-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('adm-add-notice-modal').classList.remove('hidden');
+    };
+
+    document.getElementById('adm-notice-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await window.db.addAnnouncement({
+        title: document.getElementById('new-notice-title').value.trim(),
+        category: document.getElementById('new-notice-cat').value,
+        date: document.getElementById('new-notice-date').value,
+        description: document.getElementById('new-notice-desc').value.trim(),
+        important: document.getElementById('new-notice-important').checked
+      });
+      document.getElementById('adm-add-notice-modal').classList.add('hidden');
+      window.ui.showToast('Official circular broadcasted!', 'success');
+      await refreshAllData();
+    });
+
+    window.deleteNotice = async (id) => {
+      if (confirm('Delete this notice?')) {
+        await window.db.deleteAnnouncement(id);
+        window.ui.showToast('Notice deleted.', 'info');
+        await refreshAllData();
+      }
+    };
+
+    window.resetDatabaseSeed = () => {
+      if (confirm('Reset database to initial demo state?')) {
+        window.db.resetDemoData();
+        window.location.reload();
+      }
+    };
+  </script>
+</body>
+</html>

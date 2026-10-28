@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citizen Dashboard | Digital Grampanchayat</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gov-navy': '#0b3b60',
+            'gov-navy-dark': '#07253d',
+            'gov-saffron': '#f37021',
+            'gov-green': '#138808',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+  <div id="navbar-container"></div>
+
+  <!-- Dashboard Container -->
+  <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    
+    <!-- Welcome Header Banner -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-gov-navy text-amber-400 flex items-center justify-center font-bold text-2xl shadow-md border-2 border-amber-400">
+          <span id="user-avatar-initial">U</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-gov-navy">
+              <span data-i18n="welcomeUser">Welcome</span>, <span id="user-display-name">Citizen</span>
+            </h1>
+            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+              Verified Citizen
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">
+            <i class="fa-solid fa-location-dot text-amber-500 mr-1"></i>
+            <span id="user-display-ward">Ward 1</span> | Resident of Gram Panchayat
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <a href="apply-certificate.html" class="px-4 py-2 rounded-lg bg-gov-navy hover:bg-gov-navy-dark text-white font-semibold text-xs shadow-sm transition flex items-center gap-1.5">
+          <i class="fa-solid fa-file-circle-plus"></i>
+          <span data-i18n="quickActionNewCert">Apply Certificate</span>
+        </a>
+        <a href="submit-complaint.html" class="px-4 py-2 rounded-lg bg-gov-saffron hover:bg-amber-600 text-white font-semibold text-xs shadow-sm transition flex items-center gap-1.5">
+          <i class="fa-solid fa-bullhorn"></i>
+          <span data-i18n="quickActionNewCmp">Register Grievance</span>
+        </a>
+        <a href="tax-payment.html" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs shadow-sm transition flex items-center gap-1.5">
+          <i class="fa-solid fa-receipt"></i>
+          <span data-i18n="quickActionPayTax">Pay Village Tax</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4 KPI Summary Cards (Section 6) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      
+      <!-- Total Complaints -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-slate-500" data-i18n="summaryTotalCmp">Total Complaints</p>
+          <h3 id="stat-total-cmp" class="text-2xl font-extrabold text-gov-navy mt-1">0</h3>
+          <span class="text-[10px] text-slate-400">Reported issues</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-list-check"></i>
+        </div>
+      </div>
+
+      <!-- Pending Complaints -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-slate-500" data-i18n="summaryPendingCmp">Pending Complaints</p>
+          <h3 id="stat-pending-cmp" class="text-2xl font-extrabold text-amber-600 mt-1">0</h3>
+          <span class="text-[10px] text-amber-500">In review or progress</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+      </div>
+
+      <!-- Resolved Complaints -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-slate-500" data-i18n="summaryResolvedCmp">Resolved Complaints</p>
+          <h3 id="stat-resolved-cmp" class="text-2xl font-extrabold text-emerald-600 mt-1">0</h3>
+          <span class="text-[10px] text-emerald-500">Action completed</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+      </div>
+
+      <!-- Certificate Applications -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-slate-500" data-i18n="summaryCertApps">Certificate Applications</p>
+          <h3 id="stat-total-certs" class="text-2xl font-extrabold text-purple-700 mt-1">0</h3>
+          <span class="text-[10px] text-purple-500">Income / Residence / etc.</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-stamp"></i>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Dashboard Tabs Navigation -->
+    <div class="border-b border-slate-200 mb-6 flex items-center gap-2 overflow-x-auto">
+      <button class="dash-tab-btn active px-4 py-2.5 font-bold text-xs border-b-2 border-gov-navy text-gov-navy flex items-center gap-2" data-tab="tab-overview">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Overview & Activity</span>
+      </button>
+      <button class="dash-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="tab-complaints">
+        <i class="fa-solid fa-bullhorn"></i>
+        <span data-i18n="myComplaintsTab">My Complaints</span>
+      </button>
+      <button class="dash-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="tab-certificates">
+        <i class="fa-solid fa-certificate"></i>
+        <span data-i18n="myCertificatesTab">My Certificates</span>
+      </button>
+      <button class="dash-tab-btn px-4 py-2.5 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2" data-tab="tab-profile">
+        <i class="fa-solid fa-user-gear"></i>
+        <span data-i18n="myProfileTab">My Profile</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: OVERVIEW & QUICK ACTIONS -->
+    <div id="tab-overview" class="dash-tab-content space-y-6">
+      
+      <!-- Quick Services Grid in Dashboard -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <a href="apply-certificate.html" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-gov-navy shadow-sm transition flex flex-col items-center text-center">
+          <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center mb-2">
+            <i class="fa-solid fa-file-lines"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Apply Certificate</h4>
+          <span class="text-[10px] text-slate-500 mt-0.5">Online issuance</span>
+        </a>
+
+        <a href="submit-complaint.html" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-gov-navy shadow-sm transition flex flex-col items-center text-center">
+          <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mb-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Submit Complaint</h4>
+          <span class="text-[10px] text-slate-500 mt-0.5">Report civic issue</span>
+        </a>
+
+        <a href="schemes.html" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-gov-navy shadow-sm transition flex flex-col items-center text-center">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Govt Schemes</h4>
+          <span class="text-[10px] text-slate-500 mt-0.5">Welfare benefits</span>
+        </a>
+
+        <a href="announcements.html" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-gov-navy shadow-sm transition flex flex-col items-center text-center">
+          <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center mb-2">
+            <i class="fa-solid fa-bullhorn"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Announcements</h4>
+          <span class="text-[10px] text-slate-500 mt-0.5">Gram Sabha notices</span>
+        </a>
+      </div>
+
+      <!-- Recent Activity Section -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h3 class="text-base font-bold text-gov-navy mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-amber-500"></i>
+          <span data-i18n="recentActivityTitle">Recent Activity & Status Updates</span>
+        </h3>
+        
+        <div id="recent-activity-container" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: MY COMPLAINTS -->
+    <div id="tab-complaints" class="dash-tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Grievances Registered by You</h3>
+          <p class="text-xs text-slate-500">Track real-time status and officer remarks</p>
+        </div>
+        <a href="submit-complaint.html" class="px-3.5 py-1.5 rounded-lg bg-gov-navy text-white font-bold text-xs hover:bg-gov-navy-dark transition">
+          + New Complaint
+        </a>
+      </div>
+
+      <div id="my-complaints-list" class="space-y-3">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- TAB 3: MY CERTIFICATES -->
+    <div id="tab-certificates" class="dash-tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base text-slate-800">Certificate Applications</h3>
+          <p class="text-xs text-slate-500">Download officially approved and stamped certificates</p>
+        </div>
+        <a href="apply-certificate.html" class="px-3.5 py-1.5 rounded-lg bg-gov-navy text-white font-bold text-xs hover:bg-gov-navy-dark transition">
+          + Apply New Certificate
+        </a>
+      </div>
+
+      <div id="my-certificates-list" class="space-y-3">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- TAB 4: MY PROFILE (Section 12) -->
+    <div id="tab-profile" class="dash-tab-content hidden">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 max-w-2xl">
+        <h3 class="text-base font-bold text-gov-navy mb-1">Citizen Profile & Account Settings</h3>
+        <p class="text-xs text-slate-500 mb-6">Manage your contact details and village residency verification</p>
+
+        <form id="profile-form" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+              <input type="text" id="prof-name" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Mobile Number</label>
+              <input type="tel" id="prof-mobile" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy" required />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+              <input type="email" id="prof-email" class="w-full px-3 py-2 text-xs border border-slate-200 bg-slate-50 text-slate-500 rounded-lg cursor-not-allowed" disabled />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Assigned Ward</label>
+              <select id="prof-ward" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy bg-white">
+                <option value="Ward 1">Ward No. 1</option>
+                <option value="Ward 2">Ward No. 2</option>
+                <option value="Ward 3">Ward No. 3</option>
+                <option value="Ward 4">Ward No. 4</option>
+                <option value="Ward 5">Ward No. 5</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Residential Address</label>
+            <textarea id="prof-address" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy"></textarea>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between border-t border-slate-200">
+            <span class="text-[11px] text-slate-400">Account Role: Citizen</span>
+            <button type="submit" class="px-5 py-2.5 rounded-lg bg-gov-navy hover:bg-gov-navy-dark text-white font-bold text-xs shadow transition">
+              <i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Profile Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Reusable Certificate Stamped View/Print Modal -->
+  <div id="cert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6" id="printable-area">
+        <!-- Content injected dynamically -->
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between no-print">
+        <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-gov-navy text-white text-xs font-bold hover:bg-gov-navy-dark transition flex items-center gap-1.5">
+          <i class="fa-solid fa-print"></i> Print Stamped Certificate
+        </button>
+        <button onclick="document.getElementById('cert-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300 transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/lang.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Enforce route guard
+      const isAllowed = window.auth.enforceRouteGuard('authenticated');
+      if (!isAllowed) return;
+
+      const user = window.auth.getUser();
+
+      // Update welcome banner & profile fields
+      document.getElementById('user-display-name').textContent = user.name || 'Citizen';
+      document.getElementById('user-avatar-initial').textContent = (user.name || 'U').charAt(0);
+      document.getElementById('user-display-ward').textContent = user.ward || 'Ward 1';
+
+      document.getElementById('prof-name').value = user.name || '';
+      document.getElementById('prof-mobile').value = user.mobile || '';
+      document.getElementById('prof-email').value = user.email || '';
+      document.getElementById('prof-ward').value = user.ward || 'Ward 1';
+      document.getElementById('prof-address').value = user.address || '';
+
+      // Tab switching
+      document.querySelectorAll('.dash-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.dash-tab-btn').forEach(b => {
+            b.classList.remove('border-gov-navy', 'text-gov-navy', 'active');
+            b.classList.add('border-transparent', 'text-slate-500');
+          });
+          btn.classList.add('border-gov-navy', 'text-gov-navy', 'active');
+          btn.classList.remove('border-transparent', 'text-slate-500');
+
+          const tabId = btn.getAttribute('data-tab');
+          document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.add('hidden'));
+          document.getElementById(tabId).classList.remove('hidden');
+        });
+      });
+
+      // Load complaints and certificates for this user (or all if demo)
+      const complaints = await window.db.getComplaints();
+      const certificates = await window.db.getCertificates();
+
+      // Calculate stats
+      const totalCmp = complaints.length;
+      const pendingCmp = complaints.filter(c => c.status !== 'Resolved').length;
+      const resolvedCmp = complaints.filter(c => c.status === 'Resolved').length;
+      const totalCerts = certificates.length;
+
+      document.getElementById('stat-total-cmp').textContent = totalCmp;
+      document.getElementById('stat-pending-cmp').textContent = pendingCmp;
+      document.getElementById('stat-resolved-cmp').textContent = resolvedCmp;
+      document.getElementById('stat-total-certs').textContent = totalCerts;
+
+      // Populate Recent Activity
+      const activityContainer = document.getElementById('recent-activity-container');
+      const allActivities = [
+        ...complaints.map(c => ({
+          type: 'complaint',
+          id: c.complaintId,
+          title: c.title,
+          status: c.status,
+          date: c.createdAt,
+          note: c.officerRemarks
+        })),
+        ...certificates.map(cert => ({
+          type: 'certificate',
+          id: cert.certificateId,
+          title: `${cert.certificateType} - ${cert.applicantName}`,
+          status: cert.status,
+          date: cert.createdAt,
+          note: cert.adminRemarks
+        }))
+      ].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (allActivities.length === 0) {
+        activityContainer.innerHTML = `<p class="text-xs text-slate-400 py-4 text-center">No recent activity found. Apply for a certificate or report a grievance.</p>`;
+      } else {
+        activityContainer.innerHTML = allActivities.slice(0, 5).map(act => `
+          <div class="flex items-start justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50 gap-3">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg ${act.type === 'complaint' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'} flex items-center justify-center text-xs shrink-0 mt-0.5">
+                <i class="fa-solid ${act.type === 'complaint' ? 'fa-bullhorn' : 'fa-certificate'}"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs text-slate-800">${act.id}</span>
+                  <span class="text-[10px] text-slate-400">${new Date(act.date).toLocaleDateString()}</span>
+                </div>
+                <p class="text-xs font-medium text-slate-700 mt-0.5">${act.title}</p>
+                <p class="text-[11px] text-slate-500 mt-1 italic"><i class="fa-solid fa-comment-dots text-slate-400 mr-1"></i> ${act.note || 'Processing under administrative review'}</p>
+              </div>
+            </div>
+            <span class="badge-${act.status.toLowerCase().replace(' ', '')} px-2.5 py-0.5 rounded-full text-[10px] font-bold shrink-0">
+              ${act.status}
+            </span>
+          </div>
+        `).join('');
+      }
+
+      // Populate My Complaints Tab
+      const complaintsContainer = document.getElementById('my-complaints-list');
+      if (complaints.length === 0) {
+        complaintsContainer.innerHTML = `<p class="text-xs text-slate-400 p-8 text-center bg-white rounded-xl border border-slate-200">No complaints registered yet.</p>`;
+      } else {
+        complaintsContainer.innerHTML = complaints.map(c => `
+          <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-gov-navy">${c.complaintId}</span>
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-700">${c.category}</span>
+                <span class="badge-${c.status.toLowerCase().replace(' ', '')} px-2 py-0.5 rounded text-[10px] font-bold">${c.status}</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-800">${c.title}</h4>
+              <p class="text-xs text-slate-500">${c.location}</p>
+              <p class="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 mt-1">
+                <strong>Officer Remarks:</strong> ${c.officerRemarks || 'Assigned to field staff.'}
+              </p>
+            </div>
+            <a href="my-complaints.html" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold shrink-0">
+              View Tracker &rarr;
+            </a>
+          </div>
+        `).join('');
+      }
+
+      // Populate My Certificates Tab
+      const certContainer = document.getElementById('my-certificates-list');
+      if (certificates.length === 0) {
+        certContainer.innerHTML = `<p class="text-xs text-slate-400 p-8 text-center bg-white rounded-xl border border-slate-200">No certificate applications yet.</p>`;
+      } else {
+        certContainer.innerHTML = certificates.map(cert => `
+          <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-gov-navy">${cert.certificateId}</span>
+                <span class="badge-${cert.status.toLowerCase().replace(' ', '')} px-2 py-0.5 rounded text-[10px] font-bold">${cert.status}</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-800">${cert.certificateType}</h4>
+              <p class="text-xs text-slate-600"><strong>Applicant:</strong> ${cert.applicantName} | <strong>Ward:</strong> ${cert.ward || 'Ward 1'}</p>
+              <p class="text-xs text-slate-500"><strong>Remarks:</strong> ${cert.adminRemarks || 'Document verification in progress'}</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              ${cert.status === 'Approved' ? `
+                <button onclick="window.viewOfficialCertificate('${cert.certificateId}')" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-stamp"></i> View & Print
+                </button>
+              ` : `
+                <span class="text-xs text-amber-600 font-medium italic"><i class="fa-solid fa-hourglass-half mr-1"></i> Verification Pending</span>
+              `}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Profile Form Submission
+      document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const updatedName = document.getElementById('prof-name').value.trim();
+        const updatedMobile = document.getElementById('prof-mobile').value.trim();
+        const updatedWard = document.getElementById('prof-ward').value;
+        const updatedAddress = document.getElementById('prof-address').value.trim();
+
+        await window.auth.updateProfile({
+          name: updatedName,
+          mobile: updatedMobile,
+          ward: updatedWard,
+          address: updatedAddress
+        });
+
+        document.getElementById('user-display-name').textContent = updatedName;
+        document.getElementById('user-display-ward').textContent = updatedWard;
+        window.ui.showToast('Profile details updated successfully!', 'success');
+      });
+    });
+
+    // Helper to view official certificate
+    window.viewOfficialCertificate = async (certId) => {
+      const cert = await window.db.getCertificateById(certId);
+      if (!cert) return;
+
+      const modalContent = document.getElementById('printable-area');
+      modalContent.innerHTML = `
+        <div class="border-4 border-double border-gov-navy p-6 sm:p-8 bg-white relative">
+          <!-- Official Watermark Simulation -->
+          <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+            <i class="fa-solid fa-landmark text-[220px]"></i>
+          </div>
+
+          <!-- Stamped Header -->
+          <div class="text-center border-b-2 border-slate-300 pb-4 mb-6">
+            <p class="text-xs font-bold text-amber-700 uppercase tracking-widest">Government of Maharashtra | Rural Development Dept.</p>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-gov-navy mt-1">GRAM PANCHAYAT OFFICE</h2>
+            <p class="text-xs text-slate-500 font-medium">District Pune, Maharashtra - 412411</p>
+            <div class="mt-2 inline-block bg-gov-navy text-white px-4 py-1 rounded text-xs font-bold uppercase tracking-wider">
+              ${cert.certificateType.toUpperCase()}
+            </div>
+          </div>
+
+          <!-- Application ID & Date -->
+          <div class="flex items-center justify-between text-xs text-slate-600 font-semibold mb-6">
+            <span>Certificate No: <strong class="text-slate-900">${cert.certificateId}</strong></span>
+            <span>Date of Issue: <strong class="text-slate-900">${cert.approvedDate || '2026-10-24'}</strong></span>
+          </div>
+
+          <!-- Body Text -->
+          <div class="text-sm leading-relaxed text-slate-800 space-y-4 mb-8">
+            <p>This is to officially certify that <strong>${cert.applicantName}</strong>, resident of <strong>${cert.address}</strong> (${cert.ward || 'Ward 1'}), is an authenticated permanent resident of this Gram Panchayat jurisdiction.</p>
+            
+            ${cert.incomeAmount ? `
+              <p>As per the records and verification by the Talathi / Gram Sevak, the total annual household income of the applicant is certified to be <strong>₹${cert.incomeAmount}</strong> (Rupees Sixty-Five Thousand Only) from occupation: <strong>${cert.occupation || 'Agriculture'}</strong>.</p>
+            ` : ''}
+
+            ${cert.dob ? `
+              <p>Date of Event / Birth recorded in Panchayat Register: <strong>${cert.dob}</strong>.</p>
+            ` : ''}
+
+            <p class="text-xs text-slate-500 italic">This digital certificate has been issued on the basis of verified administrative records and bears a digitally authenticated Gram Panchayat seal.</p>
+          </div>
+
+          <!-- Official Stamp & Signatures -->
+          <div class="grid grid-cols-2 gap-8 pt-6 border-t border-slate-200 items-end text-center">
+            <div>
+              <div class="w-24 h-24 border-2 border-emerald-600 rounded-full mx-auto flex flex-col items-center justify-center p-1 text-emerald-700 rotate-[-12deg] bg-emerald-50/50">
+                <span class="text-[9px] font-bold">DIGITALLY APPROVED</span>
+                <i class="fa-solid fa-stamp text-xl my-0.5"></i>
+                <span class="text-[8px] font-semibold">GRAM PANCHAYAT</span>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-2">Official Digital Seal</p>
+            </div>
+
+            <div class="space-y-1">
+              <div class="h-10 flex items-center justify-center font-serif italic text-base text-gov-navy font-bold">
+                Anand Kulkarni
+              </div>
+              <p class="text-xs font-bold text-slate-800">Gram Sevak / Development Officer</p>
+              <p class="text-[10px] text-slate-500">Gram Panchayat Administrative Office</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('cert-modal').classList.remove('hidden');
+    };
+  </script>
+</body>
+</html>
